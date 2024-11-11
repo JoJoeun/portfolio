@@ -35,6 +35,11 @@ export const InputWrapper = styled.div`
     }
 `;
 
+export const Error = styled.div`
+    font-size : 14px;
+    color : red;
+`
+
 export const Label = styled.span`
     display: block;
     margin-bottom : 16px;
