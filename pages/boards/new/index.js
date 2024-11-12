@@ -1,4 +1,3 @@
-import {useState} from 'react'
 import {
     Wrapper,
     Title,
@@ -23,9 +22,21 @@ import {
     SubmitButton
 } from '../../../styles/boardsNew.js';
 
+import {useState} from 'react'
+import {gql, useMutation} from '@apollo/client'
+
+const CREATE_BOARD = gql`
+    mutation createBoard($createBoardInput : CreateBoardInput!) {
+        createBoard(createBoardInput : $createBoardInput) {
+            _id
+        }
+    }
+`
 export default function BoardsNewPage() {
     const [board, setBoard] = useState({ writer : "", password : "", title : "", contents : ""} );
     const [error, setError] = useState({ writer : "", password : "", title : "", contents : ""} );
+
+    const [createBoard] = useMutation(CREATE_BOARD);
 
     const validators = {        
         // writer : {isValid : !!value, message : "작성자를 입력해주세요."},
@@ -115,11 +126,21 @@ export default function BoardsNewPage() {
     }
 
     // 제출 버튼을 누르면 유효성 검사를 실행합니다.
-    const onClickSubmit = () => {
+    const onClickSubmit = async() => {
         // 유효성 검사에 성공하면,
         //  → isValid가 true로 반환되면,
         if(validateForm()) {
             alert("게시글이 등록되었습니다.");
+
+            const result = await createBoard({
+                variables: {
+                    writer: board.writer,
+                    password: board.password,
+                    title: board.title,
+                    contents: board.contents
+                }
+            })
+            console.log(result);
         }
 
         // if(Object.values(board).every((value) => value)) {
