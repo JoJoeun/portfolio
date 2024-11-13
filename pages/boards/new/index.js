@@ -1,5 +1,5 @@
+import { Wrapper } from '../../../styles/global.js'
 import {
-    Wrapper,
     Title,
     WriterWrapper,
     InputWrapper,
@@ -22,8 +22,10 @@ import {
     SubmitButton
 } from '../../../styles/boardsNew.js';
 
-import {useState} from 'react'
-import {gql, useMutation} from '@apollo/client'
+
+import { useState } from 'react'
+import { gql, useMutation } from '@apollo/client'
+import { useRouter } from 'next/router'
 
 const CREATE_BOARD = gql`
     mutation createBoard($createBoardInput : CreateBoardInput!) {
@@ -37,6 +39,8 @@ export default function BoardsNewPage() {
     const [error, setError] = useState({ writer : "", password : "", title : "", contents : ""} );
 
     const [createBoard] = useMutation(CREATE_BOARD);
+
+    const router = useRouter();
 
     const validators = {        
         // writer : {isValid : !!value, message : "작성자를 입력해주세요."},
@@ -130,17 +134,23 @@ export default function BoardsNewPage() {
         // 유효성 검사에 성공하면,
         //  → isValid가 true로 반환되면,
         if(validateForm()) {
-            alert("게시글이 등록되었습니다.");
+            try {
+                const result = await createBoard({
+                    variables: {
+                        createBoardInput: {
+                            writer: board.writer,
+                            password: board.password,
+                            title: board.title,
+                            contents: board.contents
+                        }
+                    }
+                })
+                console.log(result);
+                router.push(`/boards/${result.data.createBoard._id}`)
+            } catch(error) {
+                alert(error.message)
+            }
 
-            const result = await createBoard({
-                variables: {
-                    writer: board.writer,
-                    password: board.password,
-                    title: board.title,
-                    contents: board.contents
-                }
-            })
-            console.log(result);
         }
 
         // if(Object.values(board).every((value) => value)) {
