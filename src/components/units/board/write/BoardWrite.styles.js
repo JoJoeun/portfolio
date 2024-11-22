@@ -154,10 +154,12 @@ export const ButtonWrapper = styled.div`
 export const SubmitButton = styled.button`
     width : 179px;
     height : 52px;
-    border : none;
-    border-radius : 4px;
-    background-color : #FFD600;
+    border : 1px solid #000;
+    background-color : #fff;
     font-size : 16px;
     font-weight : bold;
     color : #000;
+
+    background-color : ${(props) => props.isActive ? "#FFD600" : "#fff"};
+    border-color : ${(props) => props.isActive ? "#FFD600" : "#000"};
 `;

@@ -9,6 +9,7 @@ import BoardWriteUI from './BoardWrite.presenter'
 export default function BoardWrite() {
     const [board, setBoard] = useState({ writer : "", password : "", title : "", contents : ""} );
     const [error, setError] = useState({ writer : "", password : "", title : "", contents : ""} );
+    const [isActive, setIsActive] = useState(false)
 
     const [createBoard] = useMutation(CREATE_BOARD);
 
@@ -39,7 +40,16 @@ export default function BoardWrite() {
 
     const onChangeBoard = (e) => {
         const { name, value } = e.target;
-        setBoard((prev) => ({ ...prev, [name] : value }));
+        setBoard((prev) => {
+            const updatedBoard = { ...board, [name] : value } // 최신 상태 계싼
+
+            // isActive 상태 복사
+            setIsActive(() => Object.values(updatedBoard).every((field) => field)) // 모든 필드가 채워졌는지 확인
+
+            return updatedBoard; // 상태 업데이트
+        });
+
+        // error 상태 업데이트
         setError((prev) => ({
             // 이 전 값 복사
             ...prev,
@@ -119,5 +129,6 @@ export default function BoardWrite() {
             onChangeBoard={onChangeBoard}
             onClickSubmit={onClickSubmit}
             error={error}
+            isActive={isActive}
         />
 }

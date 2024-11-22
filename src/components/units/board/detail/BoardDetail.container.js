@@ -9,7 +9,8 @@ export default function BoardDetail() {
 
     const { data } = useQuery(FETCH_BOARD, {
         variables: {boardId: router.query.boardId}
-    })
+    })    
+
 
     return <BoardDetailUI 
             data={data}
