@@ -5,6 +5,7 @@ export const FETCH_BOARDS = gql`
         fetchBoards {
             _id
             title
+            writer
             createdAt
         }
     }
