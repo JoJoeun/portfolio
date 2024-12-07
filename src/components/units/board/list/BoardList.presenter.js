@@ -18,7 +18,12 @@ export default function BoardListUI(props) {
                         {props.data?.fetchBoards.map((list) => (
                             <S.BoardTr key={list._id}>
                                 <S.BoardTd>{String(list._id).slice(-4).toUpperCase()}</S.BoardTd>
-                                <S.BoardTd id={list._id} onClick={props.onClickMoveToBoardDetail}>{list.title}</S.BoardTd>
+                                <S.BoardTd 
+                                    id={list._id} 
+                                    onClick={props.onClickMoveToBoardDetail}
+                                >
+                                    {list.title}
+                                </S.BoardTd>
                                 <S.BoardTd>{list.writer}</S.BoardTd>
                                 <S.BoardTd>{getDate(list.createdAt)}</S.BoardTd>
                             </S.BoardTr>
@@ -26,9 +31,9 @@ export default function BoardListUI(props) {
                     </tbody>
                 </S.Table>
             </S.TableWrapper>
-            <S.ButtonWrapper onClick={props.onClickMoveToBoardNew}>
-                <S.Button>
-                    <S.PencilIcon src="../../../../../public/images/ic_create.svg" />
+            <S.ButtonWrapper>
+                <S.Button onClick={props.onClickMoveToBoardNew}>
+                    <S.PencilIcon src='/images/ic_create-24px.png'/>
                     게시물 등록하기
                 </S.Button>
             </S.ButtonWrapper>
