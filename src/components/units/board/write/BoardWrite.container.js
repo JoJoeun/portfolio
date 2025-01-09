@@ -2,16 +2,17 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
 
-import { CREATE_BOARD } from './BoardWrite.queries'
+import { CREATE_BOARD, UPDATE_BOARD } from './BoardWrite.queries'
 import BoardWriteUI from './BoardWrite.presenter'
 
 
-export default function BoardWrite() {
+export default function BoardWrite(props) {
     const [board, setBoard] = useState({ writer : "", password : "", title : "", contents : ""} );
     const [error, setError] = useState({ writer : "", password : "", title : "", contents : ""} );
     const [isActive, setIsActive] = useState(false)
 
     const [createBoard] = useMutation(CREATE_BOARD);
+    const [updateBoard] = useMutation(UPDATE_BOARD)
 
     const router = useRouter();
 
@@ -41,7 +42,7 @@ export default function BoardWrite() {
     const onChangeBoard = (e) => {
         const { name, value } = e.target;
         setBoard((prev) => {
-            const updatedBoard = { ...board, [name] : value } // 최신 상태 계싼
+            const updatedBoard = { ...board, [name] : value } // 최신 상태 계산
 
             // isActive 상태 복사
             setIsActive(() => Object.values(updatedBoard).every((field) => field)) // 모든 필드가 채워졌는지 확인
@@ -125,10 +126,44 @@ export default function BoardWrite() {
         // }
     }
 
+    const onClickUpdate = async () => {
+        if(!board.title && !board.contents) {
+            alert("수정한 내용이 없습니다.")
+            return
+        }
+
+        if(!board.password) {
+            alert("비밀번호를 입력해주세요.")
+            return
+        }
+
+        const updateBoardInput = {};
+        if(board.title) updateBoardInput.title = board.title;
+        if(board.contents) updateBoardInput.contents = board.contents;
+
+        try {
+            const result = await updateBoard({
+                variables: {
+                    boardId: router.query.boardId,
+                    password: board.password,
+                    updateBoardInput
+                }
+            })
+            router.push(`/boards/${result.data.updateBoard._id}`)
+        }
+        catch(error) {
+            alert(error.message)
+        }
+    }
+
+
     return <BoardWriteUI 
             onChangeBoard={onChangeBoard}
             onClickSubmit={onClickSubmit}
+            onClickUpdate={onClickUpdate}
             error={error}
             isActive={isActive}
+            isEdit={props.isEdit}
+            data={props.data}
         />
 }
