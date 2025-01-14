@@ -1,7 +1,10 @@
-import { Wrapper } from '../../../../../styles/global.js'
-import * as S from './BoardDetail.styles'
+import { getDate } from '../../../../commons/libraries/utils.js'
+import { BoardDetailUIProps } from './BoardDetail.types.js'
 
-export default function BoardDetailUI(props) {
+import { Wrapper } from '../../../../../styles/global.js'
+import * as S from './BoardDetail.styles.js'
+
+export default function BoardDetailUI(props: BoardDetailUIProps) {
     return(
         <>
             <Wrapper className='flex-left'>
@@ -10,7 +13,9 @@ export default function BoardDetailUI(props) {
                         <S.Profile src="/Avartar.svg" />
                         <S.Info>
                             <S.Writer>{props.data?.fetchBoard?.writer}</S.Writer>
-                            <S.CreateAt>{props.data?.fetchBoard?.createdAt}</S.CreateAt>
+                            <S.CreateAt>
+                                {getDate(props.data?.fetchBoard?.createdAt)}
+                            </S.CreateAt>
                         </S.Info>
                     </S.ProfileWrapper>
                     <S.AddressWrapper>

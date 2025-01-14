@@ -1,7 +1,8 @@
 import * as S from './BoardWrite.styles';
 import { Wrapper } from '../../../../../styles/global'
+import { BoardWriteUIProps } from './BoardWrite.types';
 
-export default function BoardWriteUI(props){
+export default function BoardWriteUI(props: BoardWriteUIProps){
     return(
         <>
             <Wrapper>
@@ -14,8 +15,8 @@ export default function BoardWriteUI(props){
                             name="writer" 
                             placeholder = "이름을 적어주세요." 
                             onChange={props.onChangeBoard}
-                            defaultValue={props.data?.fetchBoard.writer}
-                            readOnly={props.data?.fetchBoard.writer}
+                            defaultValue={props.data?.fetchBoard.writer || ""} //undefined일 경우 ""
+                            readOnly={!!props.data?.fetchBoard.writer} //writer가 있을경우에만 실행
                         />
                         <S.Error>{props.error.writer}</S.Error>
                     </S.InputWrapper>

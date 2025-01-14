@@ -1,14 +1,15 @@
 import * as S from './BoardList.styles'
-import { getDate } from '../../../commons/libraries/utils' 
+import { getDate } from '../../../../commons/libraries/utils'
+import { BoardListUIProps } from './BoardList.types'
 
-export default function BoardListUI(props) {
+export default function BoardListUI(props:BoardListUIProps) {
     return(
         <>
             <S.TableWrapper>
                 <S.Table>
                     <thead>
                         <S.BoardTr>
-                            <S.BoardTh>번호</S.BoardTh>
+                            <S.BoardTh>ID</S.BoardTh>
                             <S.BoardTh>제목</S.BoardTh>
                             <S.BoardTh>작성자</S.BoardTh>
                             <S.BoardTh>날짜</S.BoardTh>

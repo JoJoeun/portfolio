@@ -1,28 +1,39 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
 
+import { IMutation, IMutationCreateBoardArgs, IMutationUpdateBoardArgs, IUpdateBoardInput } from '../../../../commons/types/generated/types'
+import { Board, BoardWriteProps, ErrorState } from './BoardWrite.types'
+
 import { CREATE_BOARD, UPDATE_BOARD } from './BoardWrite.queries'
+
 import BoardWriteUI from './BoardWrite.presenter'
 
 
-export default function BoardWrite(props) {
-    const [board, setBoard] = useState({ writer : "", password : "", title : "", contents : ""} );
-    const [error, setError] = useState({ writer : "", password : "", title : "", contents : ""} );
-    const [isActive, setIsActive] = useState(false)
-
-    const [createBoard] = useMutation(CREATE_BOARD);
-    const [updateBoard] = useMutation(UPDATE_BOARD)
-
+export default function BoardWrite(props: BoardWriteProps) {
     const router = useRouter();
+    if(!router || router.query.boardId !== "string") return <></>
 
-    const validators = {        
-        // writer : {isValid : !!value, message : "작성자를 입력해주세요."},
-        // password : {isValid : !!value, message : "비밀번호를 입력해주세요."},
-        // title : {isValid : !!value, message : "제목을 입력해주세요."},
-        // contents : {isValid : !!value, message : "내용을 입력해주세요."}
-        
-        // 중복값 삭제
+    const [board, setBoard] = useState<Board>({
+        writer : "",
+        password : "",
+        title : "",
+        contents : ""
+    });
+    const [error, setError] = useState<ErrorState>({
+        writer : "", 
+        password : "", 
+        title : "", 
+        contents : ""
+    });
+    const [isActive, setIsActive] = useState(false);
+
+    const [createBoard] = useMutation<Pick<IMutation,"createBoard">, IMutationCreateBoardArgs>(CREATE_BOARD);
+    const [updateBoard] = useMutation<Pick<IMutation,"updateBoard">, IMutationUpdateBoardArgs>(UPDATE_BOARD)
+
+    const validators: Record<keyof Board,{ message: string }> = {    
+        // Board타입의 키를 복사하고, 각 키에 { message: string } 할당
+        // 중복값 삭제 {isValid : !!value, message : "왈라왈라라"}
         writer : { message : "작성자를 입력해주세요." },
         password : { message : "비밀번호를 입력해주세요." },
         title : { message : "제목을 입력해주세요." },
@@ -30,7 +41,7 @@ export default function BoardWrite(props) {
     }
 
     // 유효성 검사해주는 함수
-    const validateField = (name, value) => {
+    const validateField = (name: keyof Board, value: string) => {
         // !! : truthy한 값은 true로 falsy한 값은 false로 반환
         // VALUE가  truthy한 경우 유효하다고 판단
         const isValid = !!value;
@@ -39,32 +50,28 @@ export default function BoardWrite(props) {
             : validators[name].message;
     }
 
-    const onChangeBoard = (e) => {
+    const onChangeBoard = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setBoard((prev) => {
             const updatedBoard = { ...board, [name] : value } // 최신 상태 계산
 
             // isActive 상태 복사
-            setIsActive(() => Object.values(updatedBoard).every((field) => field)) // 모든 필드가 채워졌는지 확인
+            setIsActive(() => Object.values(updatedBoard).every((field) => field)); //모든 필드가 채워졌는지 확인
 
             return updatedBoard; // 상태 업데이트
         });
 
-        // error 상태 업데이트
         setError((prev) => ({
-            // 이 전 값 복사
-            ...prev,
-            // name 값에 해당하는 속성을 validateField에서 가져와서
-            // name, value를 참조.
-            [name] : validateField(name,value)
+            ...prev, // 이전 값 복사
+            [name] : validateField(name as keyof Board,value) // Board에 속하는 key로 타입 단언
         }));
     }
 
     // 전체 유효성 검사
     const validateForm = () => {
-        // 각 필드의 에러 메시지를 저장하기 위한 객체, name을 key로 하여 각 필드의 에러 message를 저장
+        // 각 필드의 에러 message를 저장
         // ex. newError.writer = "작성자를 입력해주세요." 
-        const newError = {}
+        const newError:ErrorState = { writer: "", password: "", title: "", contents: ""}
         let isValid = true;
 
         // Object.entries(변수) : 변수 객체의 key-value 쌍을 배열 형태로 반환.
@@ -73,13 +80,13 @@ export default function BoardWrite(props) {
         // 반환된 배열에 대해 각 key(name → writer,password...) 값(value → message...) 반복작업 수행
         forEach(([name,value]) => {
             // validateField의 name과 value를 받아, 유효성 검사 결과를 할당한다.
-            // 유효하면 true결과의 메세지를 반환, 유효하지 않으면 false 결과의 메세지를 반환.
+            // 유효하면 true 메세지, 유효하지 않으면 false 메세지를 반환.
             // ex. validateField("password", "") → "비밀번호를 입력해주세요." 반환
-            const errorMessage = validateField(name,value);
+            const errorMessage = validateField(name as keyof Board,value);
             // 각 필드에 대한 errorMessage를 newError에 저장
             // ex. name이 "password", errorMessage가 "비밀번호를 입력해주세요" 라면
             // → newError.password = "비밀번호를 입력해주세요."
-            newError[name] = errorMessage;
+            newError[name as keyof Board] = errorMessage;
             // 만약 errorMessage가 빈 문자열이 아닐 경우 (즉, 유효성 검사가 실패할 경우)
             // → 이 떄, errorMessage는 빈 문자열이 아니기 떄문에 true임
             if(errorMessage)
@@ -93,10 +100,9 @@ export default function BoardWrite(props) {
         return isValid;
     }
 
-    // 제출 버튼을 누르면 유효성 검사를 실행합니다.
+    // 제출 버튼을 누르면 유효성 검사를 실행
     const onClickSubmit = async() => {
-        // 유효성 검사에 성공하면,
-        //  → isValid가 true로 반환되면,
+        // 유효성 검사에 성공하면(isValid가 true로 반환되면)
         if(validateForm()) {
             try {
                 const result = await createBoard({
@@ -109,21 +115,18 @@ export default function BoardWrite(props) {
                         }
                     }
                 })
+
+                if (!result.data?.createBoard) {
+                    alert("시스템에 문제가 있습니다.");
+                    return;
+                }
+
                 console.log(result);
                 router.push(`/boards/${result.data.createBoard._id}`)
             } catch(error) {
-                alert(error.message)
+                if(error instanceof Error) alert(error.message)
             }
-
         }
-
-        // if(Object.values(board).every((value) => value)) {
-            // Object.values(변수) : 변수 객체의 모든 값만을 배열로 반환한다.
-            // → board 객체의 모든 값을 배열로 반환
-            // every((value) => value) : 배열의 모든 값이 truthy한지 확인한다.
-            // → board 값 배열의 모든 값이 truthy한지 확인
-        //     alert("게시글이 등록되었습니다.")
-        // }
     }
 
     const onClickUpdate = async () => {
@@ -137,11 +140,16 @@ export default function BoardWrite(props) {
             return
         }
 
-        const updateBoardInput = {};
+        const updateBoardInput: IUpdateBoardInput = {};
         if(board.title) updateBoardInput.title = board.title;
         if(board.contents) updateBoardInput.contents = board.contents;
 
         try {
+            if(typeof router.query.boardId !== "string") {
+                alert("시스템에 문제가 있습니다.")
+                return;
+            }
+
             const result = await updateBoard({
                 variables: {
                     boardId: router.query.boardId,
@@ -149,10 +157,16 @@ export default function BoardWrite(props) {
                     updateBoardInput
                 }
             })
+
+            if(!result.data?.updateBoard){
+                alert("시스템에 문제가 있습니다.")
+                return;
+            }
+
             router.push(`/boards/${result.data.updateBoard._id}`)
         }
         catch(error) {
-            alert(error.message)
+            if(error instanceof Error) alert(error.message)
         }
     }
 
