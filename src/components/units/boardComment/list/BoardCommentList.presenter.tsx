@@ -6,8 +6,8 @@ import { BoardCommentListUIProps } from './BoardCommentList.types';
 export default function BoardCommentListUI (props: BoardCommentListUIProps) {
     return (
         <div>
-            {props.data?.fetchBoardComments.map((el) => {
-                <S.CommentWrapper>
+            {props.data?.fetchBoardComments.map((el) => (
+                <S.CommentWrapper key={el._id}>
                     <S.FlexWrapper>
                         <S.MainWrapper>
                             <S.Avatar src="/images/avatar.svg" />
@@ -25,9 +25,9 @@ export default function BoardCommentListUI (props: BoardCommentListUIProps) {
                             />
                         </S.OptionWrapper>
                     </S.FlexWrapper>
-                    <S.Date>{getDate(el?.createdAt)}</S.Date>
+                    <S.Date>{getDate(el.createdAt)}</S.Date>
                 </S.CommentWrapper>
-            })}
+            ))}
         </div>
     )
 }

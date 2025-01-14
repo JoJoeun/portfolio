@@ -1,8 +1,8 @@
-import { getDate } from '../../../../commons/libraries/utils.js'
-import { BoardDetailUIProps } from './BoardDetail.types.js'
+import { getDate } from '../../../../commons/libraries/utils'
+import { BoardDetailUIProps } from './BoardDetail.types'
 
-import { Wrapper } from '../../../../../styles/global.js'
-import * as S from './BoardDetail.styles.js'
+import { Wrapper } from '../../../../../styles/global'
+import * as S from './BoardDetail.styles'
 
 export default function BoardDetailUI(props: BoardDetailUIProps) {
     return(

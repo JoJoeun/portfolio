@@ -6,7 +6,7 @@ export const CREATE_BOARD_COMMENT = gql`
         $createBoardCommentInput: CreateBoardCommentInput!,
         $boardId: ID!
     ) {
-        createBoardInput(
+        createBoardComment(
                 createBoardCommentInput: $createBoardCommentInput, 
                 boardId: $boardId
             ) {

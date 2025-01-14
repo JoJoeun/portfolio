@@ -5,10 +5,10 @@ import { BoardCommentWriteUIProps } from './BoardCommentWrite.types';
 export default function BoardCommentWriteUI (props:BoardCommentWriteUIProps ) {
     return (
         <S.Wrapper>
-            <>
+            <S.FlexBox>
                 <S.CommentIcon src="/images/boardComment/comment.svg" />
                 <span>댓글</span>
-            </>
+            </S.FlexBox>
             <S.InputWrapper>
                 <S.Input
                     placeholder='작성자'
@@ -28,8 +28,8 @@ export default function BoardCommentWriteUI (props:BoardCommentWriteUIProps ) {
                 />
             </S.CommentBox>
             <S.ButtonWrapper>
-                <S.ContentsLength></S.ContentsLength>
-                <S.Button>{props.onClickWrite}등록하기</S.Button>
+                <S.ContentsLength>{props.contents.length}/100</S.ContentsLength>
+                <S.Button onClick={props.onClickWrite}>등록하기</S.Button>
             </S.ButtonWrapper>
         </S.Wrapper>
     )

@@ -1,11 +1,10 @@
 import * as S from './BoardWrite.styles';
-import { Wrapper } from '../../../../../styles/global'
 import { BoardWriteUIProps } from './BoardWrite.types';
 
 export default function BoardWriteUI(props: BoardWriteUIProps){
     return(
         <>
-            <Wrapper>
+            <S.Wrapper>
                 <S.Title>{props.isEdit ? "게시글 수정" : "게시글 등록"}</S.Title>
                 <S.WriterWrapper>
                     <S.InputWrapper className='half'>
@@ -94,7 +93,7 @@ export default function BoardWriteUI(props: BoardWriteUIProps){
                         {props.isEdit ? "수정하기" : "등록하기"}
                     </S.SubmitButton>
                 </S.ButtonWrapper>
-            </Wrapper>
+            </S.Wrapper>
         </>
     )
 }

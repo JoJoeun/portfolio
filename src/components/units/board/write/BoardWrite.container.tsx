@@ -12,7 +12,6 @@ import BoardWriteUI from './BoardWrite.presenter'
 
 export default function BoardWrite(props: BoardWriteProps) {
     const router = useRouter();
-    if(!router || router.query.boardId !== "string") return <></>
 
     const [board, setBoard] = useState<Board>({
         writer : "",
