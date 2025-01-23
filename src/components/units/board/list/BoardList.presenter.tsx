@@ -1,8 +1,9 @@
 import * as S from './BoardList.styles';
 import { getDate } from '../../../../commons/libraries/utils';
 import { BoardListUIProps } from './BoardList.types';
+import Pagination01 from '../../../../commons/paginations/01/Pagination01.container';
 
-export default function BoardListUI(props: BoardListUIProps) {
+export default function BoardListUI(props: BoardListUIProps): JSX.Element {
   return (
     <>
       <S.TableWrapper>
@@ -29,12 +30,15 @@ export default function BoardListUI(props: BoardListUIProps) {
           </tbody>
         </S.Table>
       </S.TableWrapper>
-      <S.ButtonWrapper>
-        <S.Button onClick={props.onClickMoveToBoardNew}>
-          <S.PencilIcon src='/images/ic_create-24px.png' />
-          게시물 등록하기
-        </S.Button>
-      </S.ButtonWrapper>
+      <S.Footer>
+        <Pagination01 refetch={props.refetch} count={props.count} />
+        <S.ButtonWrapper>
+          <S.Button onClick={props.onClickMoveToBoardNew}>
+            <S.PencilIcon src='/images/ic_create-24px.png' />
+            게시물 등록하기
+          </S.Button>
+        </S.ButtonWrapper>
+      </S.Footer>
     </>
   );
 }

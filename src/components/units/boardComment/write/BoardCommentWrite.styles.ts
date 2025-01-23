@@ -28,6 +28,8 @@ export const InputWrapper = styled.div`
 
 export const Input = styled.input`
   border-radius: 0;
+  border: 1px solid #bdbdbd;
+  padding: 14px;
 
   :focus {
     outline: none;

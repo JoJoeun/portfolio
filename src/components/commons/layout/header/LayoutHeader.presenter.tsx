@@ -8,8 +8,10 @@ export default function LayoutHeaderUI(props: ILayoutHeaderProps): JSX.Element {
         <InnerLogo onClick={props.onClickLogo}>
           <img src='/images/logo.png' />
         </InnerLogo>
-        <InnerButton onClick={props.onClickMoveToLogin}>로그인</InnerButton>
-        <InnerButton>회원가입</InnerButton>
+        <InnerWrapper>
+          <InnerButton onClick={props.onClickMoveToLogin}>로그인</InnerButton>
+          <InnerButton>회원가입</InnerButton>
+        </InnerWrapper>
       </InnerWrapper>
     </Wrapper>
   );

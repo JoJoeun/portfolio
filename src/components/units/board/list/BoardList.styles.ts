@@ -59,3 +59,9 @@ export const PencilIcon = styled.img`
   width: 24px;
   height: 24px;
 `;
+
+export const Footer = styled.div`
+  width: calc(100vw - 500px);
+  display: flex;
+  align-items: center;
+`;
