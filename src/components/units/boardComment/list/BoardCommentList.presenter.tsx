@@ -1,47 +1,14 @@
-import { getDate } from '../../../../commons/libraries/utils';
-import * as S from './BoardCommentList.styles';
-
-import { BoardCommentListUIProps } from './BoardCommentList.types';
+import CommentItem01 from '../../../commons/comments/01/commentItem01';
+import type { BoardCommentListUIProps } from './BoardCommentList.types';
+import InfiniteScroll from 'react-infinite-scroller';
 
 export default function BoardCommentListUI(props: BoardCommentListUIProps): JSX.Element {
   return (
-    <div>
-      {props.isOpenDeleteModal && (
-        <S.PasswordModal
-          open={props.isOpenDeleteModal}
-          onOk={props.onClickDelete}
-          onCancel={props.onClickCancel}
-          closable={false}
-        >
-          <div>비밀번호 입력</div>
-          <S.passwordInput type='password' onChange={props.onChangeDeletePassword} />
-        </S.PasswordModal>
+    <InfiniteScroll pageStart={0} loadMore={props.onLoadMore} hasMore={true}>
+      {props.data?.fetchBoardComments.map((el) => <CommentItem01 key={el._id} el={el} />) ?? (
+        // 댓글 없으면 빈값 - ui렌더링하지 않음
+        <></>
       )}
-      {props.data?.fetchBoardComments.map((el) => (
-        <S.CommentWrapper key={el._id}>
-          <S.FlexWrapper>
-            <S.MainWrapper>
-              <S.Avatar src='/images/avatar.svg' />
-              <S.CommentBox>
-                <S.WriterWrapper>
-                  <S.Writer>{el.writer}</S.Writer>
-                  <S.star value={el.rating} />
-                </S.WriterWrapper>
-                <S.Comment>{el.contents}</S.Comment>
-              </S.CommentBox>
-            </S.MainWrapper>
-            <S.OptionWrapper>
-              <S.UpdateIcon src='/images/boardComment/update.svg' />
-              <S.DeleteIcon
-                id={el._id}
-                src='/images/boardComment/delete.svg'
-                onClick={props.onClickOpenDeleteModal}
-              />
-            </S.OptionWrapper>
-          </S.FlexWrapper>
-          <S.Date>{getDate(el?.createdAt)}</S.Date>
-        </S.CommentWrapper>
-      ))}
-    </div>
+    </InfiniteScroll>
   );
 }

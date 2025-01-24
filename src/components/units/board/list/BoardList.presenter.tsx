@@ -1,7 +1,7 @@
 import * as S from './BoardList.styles';
 import { getDate } from '../../../../commons/libraries/utils';
 import { BoardListUIProps } from './BoardList.types';
-import Pagination01 from '../../../../commons/paginations/01/Pagination01.container';
+import Pagination01 from '../../../commons/paginations/01/Pagination01.container';
 
 export default function BoardListUI(props: BoardListUIProps): JSX.Element {
   return (

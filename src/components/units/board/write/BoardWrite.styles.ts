@@ -45,6 +45,7 @@ export const InputWrapper = styled.div`
 export const Error = styled.div`
   font-size: 14px;
   color: red;
+  margin-top: 4px;
 `;
 
 export const Label = styled.span`
@@ -65,7 +66,6 @@ export const Subject = styled.input`
 export const Contents = styled.textarea`
   width: 100%;
   height: 480px;
-  resize: none;
 `;
 
 export const PostcodeWrapper = styled.div`
